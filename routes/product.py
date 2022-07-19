@@ -15,7 +15,11 @@ def get_product(id_restaurant:int):
         if find_menu == None:
             return {'Error': 'No existe un menú'}
         else:
-            products = conn.execute(select(product).where(product.c.menu_id == find_menu[0])).fetchall()
-            return {'products' : products}
+            print(find_menu,find_menu[0])
+            if find_menu[0] == None or find_menu[0] == []:
+                return {'Error': 'No existe un producto'}
+            else:
+                products = conn.execute(select(product).where(product.c.menu_id == find_menu[0])).fetchall()
+                return {'products' : products}
     except Exception as e:
         return {'Error': str(e)}

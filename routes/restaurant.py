@@ -8,4 +8,8 @@ restaurant_route = APIRouter()
 
 @restaurant_route.get('/restaurant')
 def get_all_restaurant():
-    return conn.execute(restaurant.select()).fetchall()
+    try:
+        return conn.execute(restaurant.select()).fetchall()
+    except Exception as e:
+        return {"Error":str(e)}
+        
