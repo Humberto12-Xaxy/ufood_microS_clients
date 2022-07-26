@@ -9,7 +9,7 @@ from config.db import conn
 product_router = APIRouter()
 
 @product_router.get('/product/{id_restaurant}')
-def get_product(id_restaurant:int):
+async def get_product(id_restaurant:int):
     try:
         find_menu = conn.execute(select(menu).where(menu.c.shop_id == id_restaurant)).first()
         if find_menu == None:
