@@ -5,7 +5,7 @@ from models.product import product
 from models.menu import menu
 from models.restaurant import restaurant
 
-from config.db import conn
+from config.db import conn,session
 
 product_router = APIRouter()
 
@@ -18,17 +18,17 @@ def home():
 @product_router.get('/product/{id_restaurant}')
 async def get_product(id_restaurant: int):
     try:
-        find_menu = await conn.execute(select(menu).where(
-            menu.c.shop_id == id_restaurant)).first()
+        find_menu = session.execute(select(menu).where(menu.c.shop_id == id_restaurant)).first()
         if find_menu == None:
             return {'Error': 'No existe un menú'}
         else:
-            products = await conn.execute(select(product).where(
+            products = await session.execute(select(product).where(
                 product.c.menu_id == find_menu[0])).fetchall()
             if len(products) > 0:
                 return {'products': products}
             else:
-                return {'products': []}
+                products = session.execute(select(product).where(product.c.menu_id == find_menu[0])).fetchall()
+                return {'products' : products}
     except Exception as e:
         return {'Error': str(e)}
 
@@ -37,14 +37,14 @@ async def get_product(id_restaurant: int):
 async def all_products():
     try:
         data_products = []
-        products = await conn.execute(product.select()).fetchall()
+        products = await session.execute(product.select()).fetchall()
 
         if len(products) > 0:
             for data in products:
                 map_response = {}
-                data_menu = conn.execute(menu.select().where(
+                data_menu = session.execute(menu.select().where(
                     menu.c.id == data['menu_id'])).first()
-                restaurants = conn.execute(restaurant.select().where(
+                restaurants = session.execute(restaurant.select().where(
                     restaurant.c.id == data_menu[1])).first()
                 if data['menu_id'] == data_menu[1] or data_menu[1] == restaurants[0]:
                     map_response = {
