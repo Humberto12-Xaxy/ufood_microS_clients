@@ -23,7 +23,7 @@ async def get_product(id_restaurant: int):
         if find_menu == None:
             return {'Error': 'No existe un menú'}
         else:
-            products = conn.execute(select(product).where(
+            products = await conn.execute(select(product).where(
                 product.c.menu_id == find_menu[0])).fetchall()
             if len(products) > 0:
                 return {'products': products}
