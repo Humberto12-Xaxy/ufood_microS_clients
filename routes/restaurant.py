@@ -8,7 +8,7 @@ restaurant_route = APIRouter()
 
 @restaurant_route.get('/')
 def home():
-    return {'Hola'}
+    return {'Hola xd'}
 
 @restaurant_route.get('/restaurant')
 async def get_all_restaurant():
