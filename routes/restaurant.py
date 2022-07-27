@@ -13,6 +13,6 @@ def home():
 @restaurant_route.get('/restaurant')
 async def get_all_restaurant():
     try:
-        return session.execute(restaurant.select()).fetchall()
+        return await session.execute(restaurant.select()).fetchall()
     except Exception as e:
         return {'Error': str(e)}
